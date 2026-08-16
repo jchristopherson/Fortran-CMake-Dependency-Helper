@@ -29,6 +29,7 @@ export function generateDependenciesCMake(workspaceFolder: string, deps: Depende
 
   for (const dep of deps.dependencies) {
     const libName = dep.name;
+    const cmakePackageName = dep.cmakePackage || dep.name;
     const tag = dep.tag || "main";
 
     lines.push(`# Dependency: ${dep.name}`);
@@ -47,6 +48,12 @@ export function generateDependenciesCMake(workspaceFolder: string, deps: Depende
     lines.push(`    GIT_TAG ${tag}`);
     lines.push(`  )`);
     lines.push(`  FetchContent_MakeAvailable(${dep.name})`);
+    if (cmakePackageName !== libName) {
+      lines.push(`  if(NOT TARGET ${cmakePackageName})`);
+      lines.push(`    add_library(${cmakePackageName} INTERFACE IMPORTED GLOBAL)`);
+      lines.push(`  endif()`);
+      lines.push(`  target_link_libraries(${cmakePackageName} INTERFACE ${libName})`);
+    }
     lines.push(`endif()`);
     lines.push(``);
   }
@@ -60,29 +67,30 @@ export function generateProjectLinkCMake(workspaceFolder: string, deps: Dependen
     return;
   }
 
+  let content = fs.readFileSync(cmakeListsPath, "utf8");
+  content = content.replace(/\n*target_link_libraries\(\$\{PROJECT_NAME\}\s+PRIVATE\s+.*\)\s*\n?/g, "\n");
+
   const depsList = deps.dependencies
     .map(dep => dep.cmakePackage || dep.name)
     .join(" ");
 
-  let content = fs.readFileSync(cmakeListsPath, "utf8");
-  const linkLine = `target_link_libraries(${"${PROJECT_NAME}"} PRIVATE ${depsList})`;
-
   if (depsList.length === 0) {
+    fs.writeFileSync(cmakeListsPath, content, "utf8");
     return;
   }
 
-  if (!content.includes(linkLine)) {
-    if (content.includes("add_executable(")) {
-      content = content.replace(
-        /add_executable\([^\n]+\n?/,
-        match => `${match.trimEnd()}\n${linkLine}\n`
-      );
-    } else {
-      content += `\n${linkLine}\n`;
-    }
+  const linkLine = `target_link_libraries(${"${PROJECT_NAME}"} PRIVATE ${depsList})`;
 
-    fs.writeFileSync(cmakeListsPath, content, "utf8");
+  if (content.includes("add_executable(")) {
+    content = content.replace(
+      /add_executable\([^\n]+\n?/,
+      match => `${match.trimEnd()}\n${linkLine}\n`
+    );
+  } else {
+    content += `\n${linkLine}\n`;
   }
+
+  fs.writeFileSync(cmakeListsPath, content, "utf8");
 }
 
 export function ensureBaseCMakeFiles(workspaceFolder: string, projectName: string) {
