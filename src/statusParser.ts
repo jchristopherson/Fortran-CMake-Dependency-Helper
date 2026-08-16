@@ -1,6 +1,8 @@
 export type DependencyStatus = "found" | "fallback" | "failed" | "unknown";
 
-const CMAKE_NAME_PATTERN = /[A-Za-z0-9_.+-]+/g;
+function normalizeName(name: string): string {
+  return name.trim().toLowerCase();
+}
 
 export function parseCMakeOutputForStatus(output: string): Record<string, DependencyStatus> {
   const status: Record<string, DependencyStatus> = {};
@@ -11,16 +13,16 @@ export function parseCMakeOutputForStatus(output: string): Record<string, Depend
 
   let match;
   while ((match = fallbackRegex.exec(output))) {
-    status[match[1]] = "fallback";
+    status[normalizeName(match[1])] = "fallback";
   }
   while ((match = foundRegex.exec(output))) {
-    const name = match[1];
+    const name = normalizeName(match[1]);
     if (!status[name] || status[name] === "failed") {
       status[name] = "found";
     }
   }
   while ((match = failedRegex.exec(output))) {
-    const name = match[1];
+    const name = normalizeName(match[1]);
     if (!status[name]) {
       status[name] = "failed";
     }

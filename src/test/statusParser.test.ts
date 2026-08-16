@@ -24,6 +24,16 @@ describe("statusParser", () => {
     assert.equal(status["jsonfortran-cmake"], "found");
   });
 
+  it("normalizes casing from CMake output so dependency names match tree entries", () => {
+    const output = `
+      -- Found JSONFORTRAN
+      jsonfortran not found; using FetchContent fallback
+    `;
+    const status = parseCMakeOutputForStatus(output);
+
+    assert.equal(status["jsonfortran"], "fallback");
+  });
+
   it("returns empty map for empty output", () => {
     const status = parseCMakeOutputForStatus("");
     assert.deepEqual(status, {});

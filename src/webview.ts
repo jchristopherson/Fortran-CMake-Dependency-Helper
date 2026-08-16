@@ -24,6 +24,7 @@ export function showDependencyWebview(workspaceFolder: string) {
       writeDependencies(workspaceFolder, { dependencies: newDeps });
       generateDependenciesCMake(workspaceFolder, { dependencies: newDeps });
       generateProjectLinkCMake(workspaceFolder, { dependencies: newDeps });
+      vscode.commands.executeCommand("fortranDeps.validateDependencies");
       vscode.window.showInformationMessage("Dependencies updated from webview.");
     }
   });

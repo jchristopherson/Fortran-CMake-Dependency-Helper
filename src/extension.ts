@@ -81,6 +81,7 @@ export function activate(context: vscode.ExtensionContext) {
       generateProjectLinkCMake(workspaceFolder, deps);
       treeProvider.refresh();
 
+      await vscode.commands.executeCommand("fortranDeps.validateDependencies");
       vscode.window.showInformationMessage(`Added dependency: ${name}`);
     })
   );
@@ -121,6 +122,7 @@ export function activate(context: vscode.ExtensionContext) {
       generateProjectLinkCMake(workspaceFolder, deps);
       treeProvider.refresh();
 
+      await vscode.commands.executeCommand("fortranDeps.validateDependencies");
       vscode.window.showInformationMessage(`Updated dependency: ${dep.name}`);
     })
   );
@@ -150,6 +152,7 @@ export function activate(context: vscode.ExtensionContext) {
       generateProjectLinkCMake(workspaceFolder, deps);
       treeProvider.refresh();
 
+      await vscode.commands.executeCommand("fortranDeps.validateDependencies");
       vscode.window.showInformationMessage(`Removed dependency: ${targetName}`);
     })
   );

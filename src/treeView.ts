@@ -32,9 +32,11 @@ export class DependencyTreeProvider implements vscode.TreeDataProvider<Dependenc
     const deps = readDependencies(this.workspaceFolder).dependencies;
     return Promise.resolve(
       deps.map(d => {
+        const nameKey = d.name.toLowerCase();
+        const packageKey = (d.cmakePackage || d.name).toLowerCase();
         const status =
-          this.statusMap[d.name] ??
-          this.statusMap[d.cmakePackage || ""] ??
+          this.statusMap[nameKey] ??
+          this.statusMap[packageKey] ??
           "unknown";
         return new DependencyItem(d.name, d.repo, status);
       })
