@@ -1,0 +1,6 @@
+out/test/**
+node_modules/**
+.vscode/**
+.github/**
+**/*.map
+tmp-test/

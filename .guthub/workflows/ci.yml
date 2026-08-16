@@ -1,0 +1,38 @@
+name: CI
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  build-and-validate:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Compile extension
+        run: npm run compile
+
+      - name: CMake sanity check
+        run: |
+          mkdir -p test-project
+          cd test-project
+          echo 'cmake_minimum_required(VERSION 3.20)
+project(test LANGUAGES Fortran)
+add_executable(test main.f90)' > CMakeLists.txt
+          echo 'program test
+  implicit none
+  print *, "CI test"
+end program test' > main.f90
+          cmake -S . -B build
+          cmake --build build

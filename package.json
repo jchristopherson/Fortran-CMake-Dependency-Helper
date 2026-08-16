@@ -1,0 +1,78 @@
+{
+  "name": "fortran-cmake-dependency-helper",
+  "displayName": "Fortran CMake Dependency Helper",
+  "description": "Scaffold Fortran+CMake projects, manage GitHub-based dependencies, and validate them via CMake.",
+  "version": "0.0.1",
+  "publisher": "jchristopherson",
+  "engines": {
+    "vscode": "^1.85.0"
+  },
+  "categories": ["Other"],
+  "activationEvents": [
+    "onCommand:fortranDeps.initProject",
+    "onCommand:fortranDeps.addDependency",
+    "onCommand:fortranDeps.validateDependencies",
+    "onCommand:fortranDeps.openWebview",
+    "onView:fortranDeps.treeView"
+  ],
+  "main": "./out/extension.js",
+  "contributes": {
+    "commands": [
+      { "command": "fortranDeps.initProject", "title": "Fortran: Initialize CMake Project" },
+      { "command": "fortranDeps.addDependency", "title": "Fortran: Add CMake Dependency" },
+      { "command": "fortranDeps.validateDependencies", "title": "Fortran: Validate Dependencies (Run CMake)" },
+      { "command": "fortranDeps.editDependency", "title": "Fortran: Edit Dependency" },
+      { "command": "fortranDeps.removeDependency", "title": "Fortran: Remove Dependency" },
+      { "command": "fortranDeps.openWebview", "title": "Fortran: Open Dependency Manager" }
+    ],
+    "views": {
+      "explorer": [
+        { "id": "fortranDeps.treeView", "name": "Fortran Dependencies" }
+      ]
+    },
+    "menus": {
+      "view/item/context": [
+        {
+          "command": "fortranDeps.editDependency",
+          "when": "view == fortranDeps.treeView && viewItem == fortranDependency",
+          "group": "inline"
+        },
+        {
+          "command": "fortranDeps.removeDependency",
+          "when": "view == fortranDeps.treeView && viewItem == fortranDependency",
+          "group": "inline"
+        }
+      ]
+    },
+    "configuration": {
+      "type": "object",
+      "title": "Fortran CMake Dependency Helper",
+      "properties": {
+        "fortranDeps.cmakeGenerator": {
+          "type": "string",
+          "default": "cmake",
+          "description": "CMake executable to use when validating dependencies."
+        },
+        "fortranDeps.buildDirectory": {
+          "type": "string",
+          "default": "build",
+          "description": "Relative path to the CMake build directory."
+        }
+      }
+    }
+  },
+  "scripts": {
+    "vscode:prepublish": "npm run compile",
+    "compile": "tsc -p ./",
+    "watch": "tsc -watch -p ./",
+    "test": "mocha -r ts-node/register src/test/**/*.test.ts"
+  },
+  "devDependencies": {
+    "@types/node": "^22.0.0",
+    "typescript": "^5.5.0",
+    "vscode": "^1.85.0",
+    "mocha": "^10.0.0",
+    "ts-node": "^10.9.1",
+    "@types/mocha": "^10.0.1"
+  }
+}
