@@ -1,9 +1,13 @@
 {
   "name": "fortran-cmake-dependency-helper",
   "displayName": "Fortran CMake Dependency Helper",
-  "description": "Scaffold Fortran+CMake projects, manage GitHub-based dependencies, and validate them via CMake.",
+  "description": "A VSCode extension that scaffolds Fortran + CMake projects, manages GitHub-based dependencies, and validates them via CMake. It prefers find_package when available and automatically falls back to FetchContent when needed.",
   "version": "0.0.1",
-  "publisher": "jchristopherson",
+  "publisher": "Jason Christopherson",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/jchristopherson/Fortran-CMake-Dependency-Helper"
+  },
   "engines": {
     "vscode": "^1.85.0"
   },
