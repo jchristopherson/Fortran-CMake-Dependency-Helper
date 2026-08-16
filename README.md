@@ -1,7 +1,7 @@
 <picture>
-  <source media="(prefers-color-scheme: dark)" srcset="logos/logo-dark.svg">
-  <source media="(prefers-color-scheme: light)" srcset="logos/logo-light.svg">
-  <img alt="Logo" src="logos/logo-light.svg">
+  <source media="(prefers-color-scheme: dark)" srcset="logos/logo-128-dark.png">
+  <source media="(prefers-color-scheme: light)" srcset="logos/logo-128.png">
+  <img alt="Logo" src="logos/logo-128.png">
 </picture>
 
 # Fortran CMake Dependency Helper
