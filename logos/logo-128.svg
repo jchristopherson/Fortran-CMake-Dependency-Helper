@@ -1,0 +1,29 @@
+<svg width="128" height="128" viewBox="0 0 128 128" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="fGradSmall" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#8A2BE2"/>
+      <stop offset="100%" stop-color="#6A0DAD"/>
+    </linearGradient>
+  </defs>
+
+  <rect width="128" height="128" fill="#ffffff"/>
+
+  <!-- Centered triangle -->
+  <g transform="translate(40,32) scale(0.65)" opacity="0.95">
+    <polygon points="0,120 60,80 60,0" fill="#1f4b99"/>
+    <polygon points="0,120 120,120 60,80" fill="#009b77"/>
+    <polygon points="60,80 120,120 60,0" fill="#d62828"/>
+  </g>
+
+  <!-- Centered F -->
+  <g transform="translate(4,4)">
+    <text x="0" y="100"
+          font-family="Times New Roman"
+          font-size="100"
+          font-weight="bold"
+          fill="url(#fGradSmall)"
+          style="letter-spacing:-4px;">
+      F
+    </text>
+  </g>
+</svg>

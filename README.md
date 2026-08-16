@@ -1,6 +1,6 @@
-# Fortran CMake Dependency Helper
+![Logo](logos/logo-light.svg)
 
-![Build status](https://github.com/jchristopherson/Fortran-CMake-Dependency-Helper/actions/workflows/ci.yml/badge.svg)
+# Fortran CMake Dependency Helper
 
 A VSCode extension that:
 
