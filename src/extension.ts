@@ -87,9 +87,18 @@ export function activate(context: vscode.ExtensionContext) {
 
   // Edit dependency
   context.subscriptions.push(
-    vscode.commands.registerCommand("fortranDeps.editDependency", async (item: DependencyItem) => {
+    vscode.commands.registerCommand("fortranDeps.editDependency", async (item?: DependencyItem) => {
       const deps = readDependencies(workspaceFolder);
-      const dep = deps.dependencies.find(d => d.name === item.label);
+      const targetName = item?.label || await vscode.window.showQuickPick(
+        deps.dependencies.map(d => d.name),
+        { placeHolder: "Select dependency to edit" }
+      );
+
+      if (!targetName) {
+        return;
+      }
+
+      const dep = deps.dependencies.find(d => d.name === targetName);
       if (!dep) {
         return;
       }
@@ -118,16 +127,30 @@ export function activate(context: vscode.ExtensionContext) {
 
   // Remove dependency
   context.subscriptions.push(
-    vscode.commands.registerCommand("fortranDeps.removeDependency", async (item: DependencyItem) => {
+    vscode.commands.registerCommand("fortranDeps.removeDependency", async (item?: DependencyItem) => {
       const deps = readDependencies(workspaceFolder);
-      deps.dependencies = deps.dependencies.filter(d => d.name !== item.label);
+      const targetName = item?.label || await vscode.window.showQuickPick(
+        deps.dependencies.map(d => d.name),
+        { placeHolder: "Select dependency to remove" }
+      );
+
+      if (!targetName) {
+        return;
+      }
+
+      const originalLength = deps.dependencies.length;
+      deps.dependencies = deps.dependencies.filter(d => d.name !== targetName);
+
+      if (deps.dependencies.length === originalLength) {
+        return;
+      }
 
       writeDependencies(workspaceFolder, deps);
       generateDependenciesCMake(workspaceFolder, deps);
       generateProjectLinkCMake(workspaceFolder, deps);
       treeProvider.refresh();
 
-      vscode.window.showInformationMessage(`Removed dependency: ${item.label}`);
+      vscode.window.showInformationMessage(`Removed dependency: ${targetName}`);
     })
   );
 

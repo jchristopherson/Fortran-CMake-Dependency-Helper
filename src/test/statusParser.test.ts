@@ -13,6 +13,17 @@ describe("statusParser", () => {
     assert.equal(status["otherlib"], "found");
   });
 
+  it("detects status for aliased or hyphenated package names", () => {
+    const output = `
+      Could NOT find jsonfortran (missing: JSONFORTRAN_LIBRARIES)
+      -- Found jsonfortran-cmake
+    `;
+    const status = parseCMakeOutputForStatus(output);
+
+    assert.equal(status["jsonfortran"], "failed");
+    assert.equal(status["jsonfortran-cmake"], "found");
+  });
+
   it("returns empty map for empty output", () => {
     const status = parseCMakeOutputForStatus("");
     assert.deepEqual(status, {});

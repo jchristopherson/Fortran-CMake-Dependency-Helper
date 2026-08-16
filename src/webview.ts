@@ -80,6 +80,15 @@ function getHtml(deps: FortranDependency[]): string {
   <script>
     const vscode = acquireVsCodeApi();
 
+    function readRow(row) {
+      const inputs = row.querySelectorAll("input");
+      const obj = {};
+      inputs.forEach(input => {
+        obj[input.dataset.field] = input.value;
+      });
+      return obj;
+    }
+
     function addRow() {
       const tbody = document.getElementById("dep-body");
       const row = document.createElement("tr");
@@ -104,14 +113,7 @@ function getHtml(deps: FortranDependency[]): string {
     document.getElementById("save").addEventListener("click", () => {
       const rows = Array.from(document.querySelectorAll("#dep-body tr"));
       const deps = rows
-        .map(row => {
-          const inputs = row.querySelectorAll("input");
-          const obj = {};
-          inputs.forEach(input => {
-            obj[input.dataset.field] = input.value;
-          });
-          return obj;
-        })
+        .map(row => readRow(row))
         .filter(dep => dep.name || dep.repo || dep.tag || dep.version || dep.cmakePackage);
 
       vscode.postMessage({ type: "save", dependencies: deps });
