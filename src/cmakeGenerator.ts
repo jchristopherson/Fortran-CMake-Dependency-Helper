@@ -28,14 +28,18 @@ export function generateDependenciesCMake(workspaceFolder: string, deps: Depende
   lines.push("");
 
   for (const dep of deps.dependencies) {
-    const pkgName = dep.cmakePackage || dep.name;
+    const libName = dep.name;
     const tag = dep.tag || "main";
 
     lines.push(`# Dependency: ${dep.name}`);
-    lines.push(`find_package(${pkgName} QUIET)`);
+    if (dep.version) {
+      lines.push(`find_package(${libName} ${dep.version} QUIET)`);
+    } else {
+      lines.push(`find_package(${libName} QUIET)`);
+    }
     lines.push(``);
-    lines.push(`if(NOT ${pkgName}_FOUND)`);
-    lines.push(`  message(STATUS "${pkgName} not found; using FetchContent fallback")`);
+    lines.push(`if(NOT ${libName}_FOUND)`);
+    lines.push(`  message(STATUS "${libName} not found; using FetchContent fallback")`);
     lines.push(`  include(FetchContent)`);
     lines.push(`  FetchContent_Declare(`);
     lines.push(`    ${dep.name}`);
@@ -48,6 +52,37 @@ export function generateDependenciesCMake(workspaceFolder: string, deps: Depende
   }
 
   fs.writeFileSync(filePath, lines.join("\n"), "utf8");
+}
+
+export function generateProjectLinkCMake(workspaceFolder: string, deps: DependencyFile) {
+  const cmakeListsPath = path.join(workspaceFolder, "CMakeLists.txt");
+  if (!fs.existsSync(cmakeListsPath)) {
+    return;
+  }
+
+  const depsList = deps.dependencies
+    .map(dep => dep.cmakePackage || dep.name)
+    .join(" ");
+
+  let content = fs.readFileSync(cmakeListsPath, "utf8");
+  const linkLine = `target_link_libraries(${"${PROJECT_NAME}"} PRIVATE ${depsList})`;
+
+  if (depsList.length === 0) {
+    return;
+  }
+
+  if (!content.includes(linkLine)) {
+    if (content.includes("add_executable(")) {
+      content = content.replace(
+        /add_executable\([^\n]+\n?/,
+        match => `${match.trimEnd()}\n${linkLine}\n`
+      );
+    } else {
+      content += `\n${linkLine}\n`;
+    }
+
+    fs.writeFileSync(cmakeListsPath, content, "utf8");
+  }
 }
 
 export function ensureBaseCMakeFiles(workspaceFolder: string, projectName: string) {

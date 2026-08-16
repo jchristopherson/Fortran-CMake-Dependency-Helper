@@ -7,7 +7,9 @@
   "engines": {
     "vscode": "^1.85.0"
   },
-  "categories": ["Other"],
+  "categories": [
+    "Other"
+  ],
   "activationEvents": [
     "onCommand:fortranDeps.initProject",
     "onCommand:fortranDeps.addDependency",
@@ -18,16 +20,37 @@
   "main": "./out/extension.js",
   "contributes": {
     "commands": [
-      { "command": "fortranDeps.initProject", "title": "Fortran: Initialize CMake Project" },
-      { "command": "fortranDeps.addDependency", "title": "Fortran: Add CMake Dependency" },
-      { "command": "fortranDeps.validateDependencies", "title": "Fortran: Validate Dependencies (Run CMake)" },
-      { "command": "fortranDeps.editDependency", "title": "Fortran: Edit Dependency" },
-      { "command": "fortranDeps.removeDependency", "title": "Fortran: Remove Dependency" },
-      { "command": "fortranDeps.openWebview", "title": "Fortran: Open Dependency Manager" }
+      {
+        "command": "fortranDeps.initProject",
+        "title": "Fortran: Initialize CMake Project"
+      },
+      {
+        "command": "fortranDeps.addDependency",
+        "title": "Fortran: Add CMake Dependency"
+      },
+      {
+        "command": "fortranDeps.validateDependencies",
+        "title": "Fortran: Validate Dependencies (Run CMake)"
+      },
+      {
+        "command": "fortranDeps.editDependency",
+        "title": "Fortran: Edit Dependency"
+      },
+      {
+        "command": "fortranDeps.removeDependency",
+        "title": "Fortran: Remove Dependency"
+      },
+      {
+        "command": "fortranDeps.openWebview",
+        "title": "Fortran: Open Dependency Manager"
+      }
     ],
     "views": {
       "explorer": [
-        { "id": "fortranDeps.treeView", "name": "Fortran Dependencies" }
+        {
+          "id": "fortranDeps.treeView",
+          "name": "Fortran Dependencies"
+        }
       ]
     },
     "menus": {
@@ -68,11 +91,11 @@
     "test": "mocha -r ts-node/register src/test/**/*.test.ts"
   },
   "devDependencies": {
+    "@types/mocha": "^10.0.1",
     "@types/node": "^22.0.0",
-    "typescript": "^5.5.0",
-    "vscode": "^1.85.0",
-    "mocha": "^10.0.0",
+    "@types/vscode": "^1.85.0",
+    "mocha": "^8.1.3",
     "ts-node": "^10.9.1",
-    "@types/mocha": "^10.0.1"
+    "typescript": "^5.5.0"
   }
 }

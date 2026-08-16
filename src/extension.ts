@@ -10,6 +10,8 @@ import {
 import { FortranDependency } from "./dependencyModel";
 import { DependencyTreeProvider, DependencyItem } from "./treeView";
 import { parseCMakeOutputForStatus } from "./statusParser";
+import { showDependencyWebview } from "./webview";
+import { generateProjectLinkCMake } from "./cmakeGenerator";
 
 export function activate(context: vscode.ExtensionContext) {
   const workspaceFolder = vscode.workspace.workspaceFolders?.[0]?.uri.fsPath;
@@ -76,6 +78,7 @@ export function activate(context: vscode.ExtensionContext) {
       deps.dependencies.push(newDep);
       writeDependencies(workspaceFolder, deps);
       generateDependenciesCMake(workspaceFolder, deps);
+      generateProjectLinkCMake(workspaceFolder, deps);
       treeProvider.refresh();
 
       vscode.window.showInformationMessage(`Added dependency: ${name}`);
@@ -106,6 +109,7 @@ export function activate(context: vscode.ExtensionContext) {
 
       writeDependencies(workspaceFolder, deps);
       generateDependenciesCMake(workspaceFolder, deps);
+      generateProjectLinkCMake(workspaceFolder, deps);
       treeProvider.refresh();
 
       vscode.window.showInformationMessage(`Updated dependency: ${dep.name}`);
@@ -120,6 +124,7 @@ export function activate(context: vscode.ExtensionContext) {
 
       writeDependencies(workspaceFolder, deps);
       generateDependenciesCMake(workspaceFolder, deps);
+      generateProjectLinkCMake(workspaceFolder, deps);
       treeProvider.refresh();
 
       vscode.window.showInformationMessage(`Removed dependency: ${item.label}`);
@@ -154,11 +159,18 @@ export function activate(context: vscode.ExtensionContext) {
     })
   );
 
+  context.subscriptions.push(
+    vscode.commands.registerCommand("fortranDeps.openWebview", () => {
+      showDependencyWebview(workspaceFolder);
+    })
+  );
+
   // Auto-regenerate dependencies.cmake when JSON is saved
   vscode.workspace.onDidSaveTextDocument(doc => {
     if (doc.fileName.endsWith("fortran-deps.json")) {
       const deps = readDependencies(workspaceFolder);
       generateDependenciesCMake(workspaceFolder, deps);
+      generateProjectLinkCMake(workspaceFolder, deps);
       treeProvider.refresh();
     }
   });
