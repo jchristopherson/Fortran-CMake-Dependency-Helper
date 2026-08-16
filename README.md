@@ -1,4 +1,8 @@
-![Logo](logos/logo-light.svg)
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="logos/logo-dark.svg">
+  <source media="(prefers-color-scheme: light)" srcset="logos/logo-light.svg">
+  <img alt="Logo" src="logos/logo-light.svg">
+</picture>
 
 # Fortran CMake Dependency Helper
 
