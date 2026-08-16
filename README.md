@@ -1,5 +1,7 @@
 # Fortran CMake Dependency Helper
 
+![Build status](https://github.com/jchristopherson/Fortran-CMake-Dependency-Helper/actions/workflows/ci.yml/badge.svg)
+
 A VSCode extension that:
 
 - Scaffolds a Fortran + CMake project (with `main.f90` entry point).
@@ -60,6 +62,14 @@ The extension generates a `cmake/dependencies.cmake` file that tries `find_packa
 The primary `CMakeLists.txt` is updated so the dependency link step appears after `add_executable` in the generated project.
 
 ![Updated primary CMake file](screenshots/Primary_CMake_Script.PNG)
+
+## Documentation
+
+- [Architecture overview](docs/architecture.md)
+- [Usage guide](docs/usage.md)
+- [Development guide](docs/development.md)
+- [Contributing guide](CONTRIBUTING.md)
+- [Changelog](CHANGELOG.md)
 
 ## Getting started
 
