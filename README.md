@@ -8,9 +8,6 @@ A VSCode extension that:
 - Generates and maintains `cmake/dependencies.cmake`.
 - Runs CMake to validate dependencies and shows status in a tree view.
 
-## FYI
-This is a work in progress.  Expect changes.
-
 ## Features
 
 - Project initialization:
