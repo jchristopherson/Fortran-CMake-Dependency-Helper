@@ -35,6 +35,32 @@ A VSCode extension that:
     - Edit dependency
     - Remove dependency
 
+## Interface overview
+
+### Dependency manager webview
+
+The dependency manager provides a simple table-based interface for adding, deleting, and saving dependency entries.
+
+![Dependency manager webview](screenshots/Webview_Interface.PNG)
+
+### Tree view status panel
+
+After validation, each dependency appears in the Explorer tree with a status icon indicating whether it was found, fell back to FetchContent, failed, or is still unknown.
+
+![Dependency tree view](screenshots/TreeView_Interface.PNG)
+
+### Generated CMake dependency script
+
+The extension generates a `cmake/dependencies.cmake` file that tries `find_package` first and falls back to `FetchContent` when needed.
+
+![Generated dependency CMake script](screenshots/Dependencies_CMake_Script.PNG)
+
+### Updated project CMake file
+
+The primary `CMakeLists.txt` is updated so the dependency link step appears after `add_executable` in the generated project.
+
+![Updated primary CMake file](screenshots/Primary_CMake_Script.PNG)
+
 ## Getting started
 
 1. Clone this repo.
