@@ -27,12 +27,16 @@ jobs:
         run: |
           mkdir -p test-project
           cd test-project
-          echo 'cmake_minimum_required(VERSION 3.20)
-project(test LANGUAGES Fortran)
-add_executable(test main.f90)' > CMakeLists.txt
-          echo 'program test
-  implicit none
-  print *, "CI test"
-end program test' > main.f90
+          cat > CMakeLists.txt <<'EOF'
+          cmake_minimum_required(VERSION 3.20)
+          project(test LANGUAGES Fortran)
+          add_executable(test main.f90)
+          EOF
+          cat > main.f90 <<'EOF'
+          program test
+            implicit none
+            print *, "CI test"
+          end program test
+          EOF
           cmake -S . -B build
           cmake --build build
