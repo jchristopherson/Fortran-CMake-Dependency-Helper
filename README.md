@@ -6,6 +6,8 @@
 
 # Fortran CMake Dependency Helper
 
+[![CI](https://github.com/jchristopherson/Fortran-CMake-Dependency-Helper/actions/workflows/ci.yml/badge.svg)](https://github.com/jchristopherson/Fortran-CMake-Dependency-Helper/actions/workflows/ci.yml)
+
 A VSCode extension that:
 
 - Scaffolds a Fortran + CMake project (with `main.f90` entry point).
