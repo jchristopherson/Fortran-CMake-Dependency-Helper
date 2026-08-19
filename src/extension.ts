@@ -13,19 +13,26 @@ import { parseCMakeOutputForStatus } from "./statusParser";
 import { showDependencyWebview } from "./webview";
 import { generateProjectLinkCMake } from "./cmakeGenerator";
 
-export function activate(context: vscode.ExtensionContext) {
+function getWorkspaceFolder(): string | undefined {
   const workspaceFolder = vscode.workspace.workspaceFolders?.[0]?.uri.fsPath;
   if (!workspaceFolder) {
     vscode.window.showWarningMessage("Open a folder before using Fortran CMake Dependency Helper.");
-    return;
   }
+  return workspaceFolder;
+}
 
-  const treeProvider = new DependencyTreeProvider(workspaceFolder);
+export function activate(context: vscode.ExtensionContext) {
+  const treeProvider = new DependencyTreeProvider(vscode.workspace.workspaceFolders?.[0]?.uri.fsPath ?? "");
   vscode.window.registerTreeDataProvider("fortranDeps.treeView", treeProvider);
 
   // Initialize project
   context.subscriptions.push(
     vscode.commands.registerCommand("fortranDeps.initProject", async () => {
+      const workspaceFolder = getWorkspaceFolder();
+      if (!workspaceFolder) {
+        return;
+      }
+
       const projectName = await vscode.window.showInputBox({
         prompt: "Project name",
         value: "fortran_app"
@@ -42,6 +49,11 @@ export function activate(context: vscode.ExtensionContext) {
   // Add dependency
   context.subscriptions.push(
     vscode.commands.registerCommand("fortranDeps.addDependency", async () => {
+      const workspaceFolder = getWorkspaceFolder();
+      if (!workspaceFolder) {
+        return;
+      }
+
       const name = await vscode.window.showInputBox({
         prompt: "Dependency logical name (e.g. jsonfortran)",
         validateInput: v => (v.trim() ? undefined : "Name is required")
@@ -89,6 +101,11 @@ export function activate(context: vscode.ExtensionContext) {
   // Edit dependency
   context.subscriptions.push(
     vscode.commands.registerCommand("fortranDeps.editDependency", async (item?: DependencyItem) => {
+      const workspaceFolder = getWorkspaceFolder();
+      if (!workspaceFolder) {
+        return;
+      }
+
       const deps = readDependencies(workspaceFolder);
       const targetName = item?.label || await vscode.window.showQuickPick(
         deps.dependencies.map(d => d.name),
@@ -130,6 +147,11 @@ export function activate(context: vscode.ExtensionContext) {
   // Remove dependency
   context.subscriptions.push(
     vscode.commands.registerCommand("fortranDeps.removeDependency", async (item?: DependencyItem) => {
+      const workspaceFolder = getWorkspaceFolder();
+      if (!workspaceFolder) {
+        return;
+      }
+
       const deps = readDependencies(workspaceFolder);
       const targetName = item?.label || await vscode.window.showQuickPick(
         deps.dependencies.map(d => d.name),
@@ -160,6 +182,11 @@ export function activate(context: vscode.ExtensionContext) {
   // Validate dependencies (run CMake)
   context.subscriptions.push(
     vscode.commands.registerCommand("fortranDeps.validateDependencies", async () => {
+      const workspaceFolder = getWorkspaceFolder();
+      if (!workspaceFolder) {
+        return;
+      }
+
       const config = vscode.workspace.getConfiguration("fortranDeps");
       const cmakeExe = config.get<string>("cmakeGenerator", "cmake");
       const buildDirRel = config.get<string>("buildDirectory", "build");
@@ -187,12 +214,21 @@ export function activate(context: vscode.ExtensionContext) {
 
   context.subscriptions.push(
     vscode.commands.registerCommand("fortranDeps.openWebview", () => {
+      const workspaceFolder = getWorkspaceFolder();
+      if (!workspaceFolder) {
+        return;
+      }
+
       showDependencyWebview(workspaceFolder);
     })
   );
 
   // Auto-regenerate dependencies.cmake when JSON is saved
   vscode.workspace.onDidSaveTextDocument(doc => {
+    const workspaceFolder = vscode.workspace.workspaceFolders?.[0]?.uri.fsPath;
+    if (!workspaceFolder) {
+      return;
+    }
     if (doc.fileName.endsWith("fortran-deps.json")) {
       const deps = readDependencies(workspaceFolder);
       generateDependenciesCMake(workspaceFolder, deps);
