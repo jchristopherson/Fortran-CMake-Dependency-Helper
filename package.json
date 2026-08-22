@@ -2,7 +2,7 @@
   "name": "fortran-cmake-dependency-helper",
   "displayName": "Fortran CMake Dependency Helper",
   "description": "A VSCode extension that scaffolds Fortran + CMake projects, manages GitHub-based dependencies, and validates them via CMake. It prefers find_package when available and automatically falls back to FetchContent when needed.",
-  "version": "0.0.3",
+  "version": "0.1.0",
   "publisher": "jchristopherson",
   "icon": "logos/logo-128.png",
   "repository": {
@@ -31,11 +31,13 @@
       },
       {
         "command": "fortranDeps.addDependency",
-        "title": "Fortran: Add CMake Dependency"
+        "title": "Fortran: Add CMake Dependency",
+        "icon": "$(add)"
       },
       {
         "command": "fortranDeps.validateDependencies",
-        "title": "Fortran: Validate Dependencies (Run CMake)"
+        "title": "Fortran: Validate Dependencies (Run CMake)",
+        "icon": "$(check)"
       },
       {
         "command": "fortranDeps.editDependency",
@@ -47,18 +49,45 @@
       },
       {
         "command": "fortranDeps.openWebview",
-        "title": "Fortran: Open Dependency Manager"
+        "title": "Fortran: Open Dependency Manager",
+        "icon": "$(settings-gear)"
       }
     ],
+    "viewsContainers": {
+      "activitybar": [
+        {
+          "id": "fortranDeps",
+          "title": "Fortran Dependencies",
+          "icon": "logos/activity-bar.svg"
+        }
+      ]
+    },
     "views": {
-      "explorer": [
+      "fortranDeps": [
         {
           "id": "fortranDeps.treeView",
-          "name": "Fortran Dependencies"
+          "name": "Dependencies"
         }
       ]
     },
     "menus": {
+      "view/title": [
+        {
+          "command": "fortranDeps.openWebview",
+          "when": "view == fortranDeps.treeView",
+          "group": "navigation@1"
+        },
+        {
+          "command": "fortranDeps.addDependency",
+          "when": "view == fortranDeps.treeView",
+          "group": "navigation@2"
+        },
+        {
+          "command": "fortranDeps.validateDependencies",
+          "when": "view == fortranDeps.treeView",
+          "group": "navigation@3"
+        }
+      ],
       "view/item/context": [
         {
           "command": "fortranDeps.editDependency",

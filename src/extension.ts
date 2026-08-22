@@ -5,6 +5,7 @@ import {
   readDependencies,
   writeDependencies,
   generateDependenciesCMake,
+  generateFeaturesCMake,
   ensureBaseCMakeFiles
 } from "./cmakeGenerator";
 import { FortranDependency } from "./dependencyModel";
@@ -90,6 +91,7 @@ export function activate(context: vscode.ExtensionContext) {
       deps.dependencies.push(newDep);
       writeDependencies(workspaceFolder, deps);
       generateDependenciesCMake(workspaceFolder, deps);
+      generateFeaturesCMake(workspaceFolder, deps);
       generateProjectLinkCMake(workspaceFolder, deps);
       treeProvider.refresh();
 
@@ -136,6 +138,7 @@ export function activate(context: vscode.ExtensionContext) {
 
       writeDependencies(workspaceFolder, deps);
       generateDependenciesCMake(workspaceFolder, deps);
+      generateFeaturesCMake(workspaceFolder, deps);
       generateProjectLinkCMake(workspaceFolder, deps);
       treeProvider.refresh();
 
@@ -171,6 +174,7 @@ export function activate(context: vscode.ExtensionContext) {
 
       writeDependencies(workspaceFolder, deps);
       generateDependenciesCMake(workspaceFolder, deps);
+      generateFeaturesCMake(workspaceFolder, deps);
       generateProjectLinkCMake(workspaceFolder, deps);
       treeProvider.refresh();
 
@@ -232,6 +236,7 @@ export function activate(context: vscode.ExtensionContext) {
     if (doc.fileName.endsWith("fortran-deps.json")) {
       const deps = readDependencies(workspaceFolder);
       generateDependenciesCMake(workspaceFolder, deps);
+      generateFeaturesCMake(workspaceFolder, deps);
       generateProjectLinkCMake(workspaceFolder, deps);
       treeProvider.refresh();
     }
